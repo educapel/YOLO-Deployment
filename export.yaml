@@ -1,0 +1,16 @@
+onnx:
+  weights_path: ./yolo11m.pt
+  is_half: false                # export the model in FP16 format
+  is_dynamic: true              # the .onnx model has dynamic batch size
+  is_simplified: true           # will optimize layers to reduce size
+  with_nms: true                # add NonMaximumSuppresion head
+  image_size: 640               # the input layer shape (Nx3x640x640)
+  device: mps                # device used for export
+
+  tensorrt:
+    device: 0
+    minShapes: images:1x3x640x640   # images is the Input Layer name
+    optShapes: images:4x3x640x640   # 1,4,8 are the preferred batch sizes
+    maxShapes: images:8x3x640x640   # 3x640x640 represents the Input Shape
+    dtype: fp16
+    image: nvcr.io/nvidia/tensorrt:22.08-py3
