@@ -22,15 +22,19 @@ onnx_path = model.export(
         dynamic=onnx_cfg["is_dynamic"]
 )
 
-# Update Export Config with ONNX model path
 onnx_updated = OmegaConf.merge(
-        onnx_cfg,
-        DictConfig({"onnx_path": m_path}),
-    )
+    onnx_cfg,
+    DictConfig({"onnx_path": onnx_path}),  
+)
+
+# 7. Merge back into full config
 merged = OmegaConf.merge(
-        conf,
-        DictConfig({"onnx": onnx_updated}),
-    )
+    export_cfg,  
+    DictConfig({"onnx": onnx_updated}),
+)
+
+# 8. Save updated config back to file
+# This overwrites export.yaml with the onnx_path added
 OmegaConf.save(merged, export_config_path)
 
 #####
